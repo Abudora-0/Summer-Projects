@@ -1,52 +1,39 @@
 "use client";
 
-import {
-  createContext,
-  useCallback,
-  useContext,
-  useMemo,
-  useRef,
-} from "react";
+import { createContext, useCallback, useContext, useMemo, useRef } from "react";
 
 interface AccentContextValue {
-  setAccent: (accent: string, accentSoft: string) => void;
+  setAccent: (accent: string) => void;
   resetAccent: () => void;
 }
 
 const AccentContext = createContext<AccentContextValue | null>(null);
 
-const DEFAULT_ACCENT = "#d9a441";
-const DEFAULT_ACCENT_SOFT = "#3a2c14";
-
+/*
+ * One hex is all a project needs. Every tint derived from it lives in
+ * globals.css as a color-mix against the current background, so the same
+ * accent reads correctly in both themes without a second hand picked value.
+ */
 export function AccentProvider({ children }: { children: React.ReactNode }) {
-  const depthRef = useRef(0);
+  // Hovering from one row straight onto another fires the new enter before the
+  // old leave. Counting depth stops that from flickering back to the default.
+  const depth = useRef(0);
 
-  const apply = useCallback((accent: string, accentSoft: string) => {
-    const root = document.documentElement;
-    root.style.setProperty("--accent", accent);
-    root.style.setProperty("--accent-soft", accentSoft);
+  const setAccent = useCallback((accent: string) => {
+    depth.current += 1;
+    document.documentElement.style.setProperty("--accent", accent);
   }, []);
 
-  const setAccent = useCallback(
-    (accent: string, accentSoft: string) => {
-      depthRef.current += 1;
-      apply(accent, accentSoft);
-    },
-    [apply]
-  );
-
   const resetAccent = useCallback(() => {
-    depthRef.current = Math.max(0, depthRef.current - 1);
-    if (depthRef.current === 0) {
-      apply(DEFAULT_ACCENT, DEFAULT_ACCENT_SOFT);
+    depth.current = Math.max(0, depth.current - 1);
+    if (depth.current === 0) {
+      document.documentElement.style.removeProperty("--accent");
     }
-  }, [apply]);
+  }, []);
 
   const value = useMemo(() => ({ setAccent, resetAccent }), [setAccent, resetAccent]);
 
-  return (
-    <AccentContext.Provider value={value}>{children}</AccentContext.Provider>
-  );
+  return <AccentContext.Provider value={value}>{children}</AccentContext.Provider>;
 }
 
 export function useAccent() {

@@ -1,35 +1,78 @@
 @import "tailwindcss";
 
-:root {
-  --ink: #0a0908;
-  --paper: #f3ede3;
-  --surface: #121110;
-  --surface-raised: #171513;
-  --line: rgba(243, 237, 227, 0.1);
-  --muted: rgba(243, 237, 227, 0.56);
+/*
+ * Dark is the default because the site was designed dark first, and because
+ * seven of the nine projects it shows are themselves dark. Light is a real
+ * second palette rather than an inversion, since inverted warm neutrals go
+ * grey and lifeless.
+ */
+:root,
+:root[data-theme="dark"] {
+  --bg: #0a0908;
+  --bg-raised: #131110;
+  --bg-sunken: #060505;
+  --fg: #f3ede3;
+  --fg-muted: rgba(243, 237, 227, 0.58);
+  --fg-faint: rgba(243, 237, 227, 0.34);
+  --line: rgba(243, 237, 227, 0.11);
+  --line-strong: rgba(243, 237, 227, 0.22);
 
   --brand: #d9a441;
-  --brand-soft: #3a2c14;
+  --shadow: 0 24px 60px -20px rgba(0, 0, 0, 0.7);
+  --grain-opacity: 0.038;
+  --grain-blend: overlay;
+  color-scheme: dark;
+}
 
+:root[data-theme="light"] {
+  --bg: #f7f3ec;
+  --bg-raised: #fffdf9;
+  --bg-sunken: #ece5d9;
+  --fg: #16130f;
+  --fg-muted: rgba(22, 19, 15, 0.62);
+  --fg-faint: rgba(22, 19, 15, 0.38);
+  --line: rgba(22, 19, 15, 0.13);
+  --line-strong: rgba(22, 19, 15, 0.26);
+
+  --brand: #9a6b12;
+  --shadow: 0 24px 60px -28px rgba(60, 45, 20, 0.32);
+  --grain-opacity: 0.03;
+  --grain-blend: multiply;
+  color-scheme: light;
+}
+
+/*
+ * One accent hex per project drives everything. Tints are mixed against the
+ * current background at paint time, so a single colour works in both themes
+ * instead of needing a hand picked dark and light variant each.
+ */
+:root {
   --accent: var(--brand);
-  --accent-soft: var(--brand-soft);
-
-  --cursor-size: 22px;
+  --accent-soft: color-mix(in oklab, var(--accent) 14%, var(--bg));
+  --accent-line: color-mix(in oklab, var(--accent) 38%, var(--bg));
+  --accent-quiet: color-mix(in oklab, var(--accent) 7%, var(--bg));
+  --accent-ink: color-mix(in oklab, var(--accent) 88%, var(--fg));
 }
 
 @theme inline {
-  --color-ink: var(--ink);
-  --color-paper: var(--paper);
-  --color-surface: var(--surface);
-  --color-surface-raised: var(--surface-raised);
+  --color-bg: var(--bg);
+  --color-bg-raised: var(--bg-raised);
+  --color-bg-sunken: var(--bg-sunken);
+  --color-fg: var(--fg);
+  --color-muted: var(--fg-muted);
+  --color-faint: var(--fg-faint);
   --color-line: var(--line);
-  --color-muted: var(--muted);
+  --color-line-strong: var(--line-strong);
   --color-brand: var(--brand);
   --color-accent: var(--accent);
   --color-accent-soft: var(--accent-soft);
+  --color-accent-line: var(--accent-line);
+  --color-accent-quiet: var(--accent-quiet);
+  --color-accent-ink: var(--accent-ink);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
   --font-display: var(--font-fraunces);
+  --font-mark: var(--font-bricolage);
 }
 
 * {
@@ -37,48 +80,36 @@
 }
 
 html {
-  background: var(--ink);
-  color-scheme: dark;
+  background: var(--bg);
+  scroll-behavior: smooth;
 }
 
 body {
-  background: var(--ink);
-  color: var(--paper);
+  background: var(--bg);
+  color: var(--fg);
   font-family: var(--font-geist-sans), Arial, Helvetica, sans-serif;
-}
-
-@media (pointer: fine) {
-  body {
-    cursor: none;
-  }
-
-  a,
-  button,
-  [role="button"],
-  input,
-  textarea {
-    cursor: none;
-  }
+  /* Colours cross fade on theme switch instead of snapping. */
+  transition: background-color 0.35s ease, color 0.35s ease;
 }
 
 ::selection {
   background: var(--accent);
-  color: var(--ink);
+  color: var(--bg);
 }
 
 :focus-visible {
   outline: 2px solid var(--accent);
   outline-offset: 3px;
-  border-radius: 2px;
+  border-radius: 3px;
 }
 
-/* Firefox scrollbar */
+/* Firefox */
 * {
   scrollbar-width: thin;
-  scrollbar-color: var(--brand) transparent;
+  scrollbar-color: color-mix(in oklab, var(--brand) 60%, var(--bg)) transparent;
 }
 
-/* Webkit scrollbar, thin thumb, no arrow buttons, rounded */
+/* Webkit: thin rounded thumb, and no arrow buttons at either end. */
 ::-webkit-scrollbar {
   width: 10px;
   height: 10px;
@@ -89,9 +120,9 @@ body {
 }
 
 ::-webkit-scrollbar-thumb {
-  background-color: color-mix(in srgb, var(--brand) 70%, transparent);
+  background-color: color-mix(in oklab, var(--brand) 55%, var(--bg));
   border-radius: 999px;
-  border: 2px solid var(--ink);
+  border: 2px solid var(--bg);
   background-clip: padding-box;
 }
 
@@ -114,6 +145,10 @@ body {
   font-family: var(--font-display), Georgia, serif;
 }
 
+.font-mark {
+  font-family: var(--font-mark), var(--font-geist-sans), sans-serif;
+}
+
 .font-mono {
   font-family: var(--font-geist-mono), monospace;
 }
@@ -123,7 +158,59 @@ body {
   inset: 0;
   pointer-events: none;
   z-index: 60;
-  opacity: 0.035;
-  mix-blend-mode: overlay;
+  opacity: var(--grain-opacity);
+  mix-blend-mode: var(--grain-blend);
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* Masked line reveals: the child slides out from under a clipped parent. */
+.reveal-mask {
+  overflow: hidden;
+  display: block;
+}
+
+/* Two identical copies sit side by side, so -50% lands seamlessly. */
+@keyframes ticker {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+@keyframes marquee-slow {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+.hide-scrollbar {
+  scrollbar-width: none;
+}
+
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+/*
+ * Anyone who has asked their system to calm down gets a still page. Motion
+ * here is decoration, so none of it is worth overriding that preference for.
+ */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
 }
