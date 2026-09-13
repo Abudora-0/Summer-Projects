@@ -40,10 +40,20 @@ function RollLink({
           transition={{ type: "spring", stiffness: 380, damping: 32 }}
         />
       )}
-      <span className="relative block h-[1.15em] overflow-hidden">
-        <span className="block transition-transform duration-[450ms] ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:-translate-y-full">
-          <span className={`block ${active ? "text-fg" : "text-muted"}`}>{label}</span>
-          <span className="block text-accent">{label}</span>
+      {/*
+        The rail holds two stacked copies, so it is twice the height of one
+        label and shifting it by half brings the second copy into the window.
+        Moving it a full height sends both copies past the top and the link
+        reads as blank, which is what it used to do.
+      */}
+      <span className="relative block h-[1.2em] overflow-hidden">
+        <span className="block transition-transform duration-[450ms] ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:-translate-y-1/2">
+          <span
+            className={`flex h-[1.2em] items-center ${active ? "text-fg" : "text-muted"}`}
+          >
+            {label}
+          </span>
+          <span className="flex h-[1.2em] items-center text-accent">{label}</span>
         </span>
       </span>
     </a>

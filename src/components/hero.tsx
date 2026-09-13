@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { motion, useReducedMotion, useScroll, useTransform } from "framer-motion";
 import { projects, stats } from "@/data/projects";
+import { HeroRotator } from "@/components/hero-rotator";
 import { ArrowRightIcon, ArrowUpRightIcon } from "@/components/icons";
 
 const LINES = ["Nine products.", "One summer.", "No two alike."];
@@ -82,7 +83,7 @@ export function Hero() {
           y: ((e.clientY - rect.top) / rect.height) * 100,
         });
       }}
-      className="relative isolate flex min-h-[92svh] flex-col justify-center overflow-hidden px-6 pb-16 pt-32 sm:px-10 sm:pt-36"
+      className="relative isolate flex min-h-[92svh] flex-col overflow-hidden pt-32 sm:pt-36"
     >
       {/* A soft light source that tracks the pointer, so the type feels lit. */}
       <div
@@ -98,7 +99,12 @@ export function Hero() {
         style={{ background: "var(--accent-quiet)" }}
       />
 
-      <motion.div style={{ y: contentY, opacity: contentOpacity }} className="mx-auto w-full max-w-6xl">
+      {/* flex-1 so the ticker below is pushed to the bottom by layout rather
+          than being positioned over the top of the stats. */}
+      <motion.div
+        style={{ y: contentY, opacity: contentOpacity }}
+        className="mx-auto flex w-full max-w-6xl flex-1 flex-col justify-center px-6 pb-14 sm:px-10"
+      >
         <motion.p
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
@@ -128,17 +134,13 @@ export function Hero() {
           ))}
         </h1>
 
-        <motion.p
+        <motion.div
           initial={{ opacity: 0, y: 14 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.45 }}
-          className="mt-8 max-w-xl text-base leading-relaxed text-muted sm:text-lg"
         >
-          A bookmark manager that thinks it is a contact sheet. A CV that swaps
-          its whole personality per job. A reader that watches manga pages
-          closely enough to translate them on the spot. I am Abudora, and this
-          is what one summer of not sitting still looks like.
-        </motion.p>
+          <HeroRotator />
+        </motion.div>
 
         <motion.div
           initial={{ opacity: 0, y: 14 }}
@@ -196,7 +198,7 @@ function ProjectTicker() {
   if (reduce) return null;
 
   return (
-    <div className="group absolute inset-x-0 bottom-0 overflow-hidden border-t border-line py-4">
+    <div className="group relative overflow-hidden border-t border-line py-4">
       <div className="flex w-max animate-[ticker_38s_linear_infinite] gap-10 group-hover:[animation-play-state:paused]">
         {[0, 1].map((copy) => (
           <div key={copy} className="flex shrink-0 items-center gap-10" aria-hidden={copy === 1}>

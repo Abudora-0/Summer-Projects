@@ -6,6 +6,7 @@ import { themeScript } from "@/components/theme";
 import { CommandPalette } from "@/components/command-palette";
 import { ShortcutsOverlay } from "@/components/shortcuts-overlay";
 import { KeyboardShortcuts } from "@/components/keyboard-shortcuts";
+import { DynamicTitle } from "@/components/dynamic-title";
 import { PageTransition } from "@/components/page-transition";
 import { Nav } from "@/components/nav";
 import "./globals.css";
@@ -34,7 +35,7 @@ const url = "https://abudora-summer.vercel.app";
 export const metadata: Metadata = {
   metadataBase: new URL(url),
   title: {
-    default: "Abudora, nine products in one summer",
+    default: "Abudora, Full Stack Developer",
     template: "%s, Abudora",
   },
   description:
@@ -83,6 +84,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
             <CommandPalette />
             <ShortcutsOverlay />
             <KeyboardShortcuts />
+            <DynamicTitle />
             <Nav />
             <PageTransition>{children}</PageTransition>
           </AccentProvider>
