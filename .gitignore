@@ -42,3 +42,7 @@ next-env.d.ts
 
 # local tooling
 .claude/
+
+# agent tooling files, regenerated locally by next dev
+CLAUDE.md
+AGENTS.md
