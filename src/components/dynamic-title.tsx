@@ -3,8 +3,8 @@
 import { useEffect } from "react";
 import { usePathname } from "next/navigation";
 
-const BASE = "Abudora, Full Stack Developer";
-/** Section titles stay short, and match the "Bento, Abudora" shape used by project pages. */
+const BASE = "Abudora | Full Stack Developer";
+/** Section titles stay short, and match the "Bento | Abudora" shape used by project pages. */
 const SUFFIX = "Abudora";
 
 const SECTIONS = [
@@ -31,7 +31,7 @@ export function DynamicTitle() {
         for (const entry of entries) {
           if (!entry.isIntersecting) continue;
           const match = SECTIONS.find((s) => s.id === entry.target.id);
-          document.title = match ? `${match.label}, ${SUFFIX}` : BASE;
+          document.title = match ? `${match.label} | ${SUFFIX}` : BASE;
         }
       },
       { rootMargin: "-25% 0px -70% 0px" }

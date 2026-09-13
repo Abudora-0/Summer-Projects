@@ -35,8 +35,8 @@ const url = "https://abudora-summer.vercel.app";
 export const metadata: Metadata = {
   metadataBase: new URL(url),
   title: {
-    default: "Abudora, Full Stack Developer",
-    template: "%s, Abudora",
+    default: "Abudora | Full Stack Developer",
+    template: "%s | Abudora",
   },
   description:
     "The portfolio of Abudora, a full stack developer in Lahore. Nine products designed, built and deployed over a single summer.",
@@ -51,7 +51,7 @@ export const metadata: Metadata = {
   authors: [{ name: "Muhammad Abdullah", url: "https://github.com/Abudora-0" }],
   creator: "Muhammad Abdullah",
   openGraph: {
-    title: "Abudora, nine products in one summer",
+    title: "Abudora | Full Stack Developer",
     description:
       "Nine products designed, built and deployed over a single summer. Bookmarks, prayer times, manga OCR, and six more.",
     url,
@@ -60,7 +60,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Abudora, nine products in one summer",
+    title: "Abudora | Full Stack Developer",
     description:
       "Nine products designed, built and deployed over a single summer.",
   },

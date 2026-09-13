@@ -46,11 +46,11 @@ export default function OpengraphImage() {
         </div>
 
         <div style={{ display: "flex", flexDirection: "column" }}>
-          <div style={{ color: "#f3ede3", fontSize: 88, lineHeight: 1.04 }}>
-            Nine products.
+          <div style={{ color: "#f3ede3", fontSize: 70, lineHeight: 1.08 }}>
+            A full stack developer
           </div>
-          <div style={{ color: "#f3ede3", fontSize: 88, lineHeight: 1.04 }}>
-            One summer.
+          <div style={{ color: "#f3ede3", fontSize: 70, lineHeight: 1.08 }}>
+            with a shipping problem.
           </div>
           <div
             style={{

@@ -7,7 +7,7 @@ import { projects, stats } from "@/data/projects";
 import { HeroRotator } from "@/components/hero-rotator";
 import { ArrowRightIcon, ArrowUpRightIcon } from "@/components/icons";
 
-const LINES = ["Nine products.", "One summer.", "No two alike."];
+const LINES = ["A full stack developer", "with a shipping", "problem."];
 
 /** Counts up once, when it first scrolls into view. */
 function CountUp({ to, duration = 1100 }: { to: number; duration?: number }) {
@@ -112,10 +112,11 @@ export function Hero() {
           className="flex items-center gap-3 font-mono text-[11px] uppercase tracking-[0.26em] text-accent"
         >
           <span className="inline-block h-1.5 w-1.5 rounded-full bg-accent" />
-          Full stack developer, Lahore
+          {/* The headline says the job now, so this carries place and time. */}
+          Lahore, Pakistan · Summer 2026
         </motion.p>
 
-        <h1 className="font-display mt-7 text-[clamp(2.7rem,8.5vw,7rem)] font-light italic leading-[0.98] tracking-[-0.02em] text-fg">
+        <h1 className="font-display mt-7 text-[clamp(2.3rem,7.2vw,5.6rem)] font-light italic leading-[1.02] tracking-[-0.02em] text-fg">
           {LINES.map((line, i) => (
             <span key={line} className="reveal-mask">
               <motion.span
@@ -139,6 +140,10 @@ export function Hero() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.45 }}
         >
+          <p className="mt-8 max-w-xl text-base leading-relaxed text-muted sm:text-lg">
+            I am Abudora. Nine finished products between June and September,
+            and not one of them looks like another.
+          </p>
           <HeroRotator />
         </motion.div>
 

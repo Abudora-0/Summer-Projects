@@ -30,7 +30,7 @@ export function HeroRotator() {
 
   return (
     <div
-      className="mt-8 max-w-xl"
+      className="mt-7 max-w-xl"
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => setPaused(false)}
     >
