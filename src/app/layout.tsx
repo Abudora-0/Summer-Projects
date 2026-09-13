@@ -27,9 +27,9 @@ const bricolage = Bricolage_Grotesque({
   axes: ["opsz", "wdth"],
 });
 
-// No custom domain yet. This only needs to be absolute so Next can resolve
-// social image URLs; update it the day the site gets a real home.
-const url = "https://abudora.vercel.app";
+// Where the site actually lives. Only needs to be absolute so Next can resolve
+// social image URLs; update it the day a custom domain points here.
+const url = "https://abudora-summer.vercel.app";
 
 export const metadata: Metadata = {
   metadataBase: new URL(url),

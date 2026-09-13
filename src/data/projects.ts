@@ -63,7 +63,7 @@ export const projects: Project[] = [
     ],
     shots: [
       { src: "/shots/bento-1.webp", caption: "A contact sheet for everything you save" },
-      { src: "/shots/bento-2.webp", caption: "The lock screen" },
+      { src: "/shots/bento-2.webp", caption: "The sheet itself, once you are inside" },
     ],
   },
   {
@@ -212,7 +212,7 @@ export const projects: Project[] = [
     ],
     shots: [
       { src: "/shots/omnikit-1.webp", caption: "One kit for every quick fix" },
-      { src: "/shots/omnikit-2.webp", caption: "A tool running entirely in the browser" },
+      { src: "/shots/omnikit-2.webp", caption: "The tool grid, searchable and filtered by kind" },
     ],
   },
   {
@@ -301,7 +301,7 @@ export const projects: Project[] = [
       { src: "/shots/wakaru-1.webp", caption: "Understand anything you read" },
       { src: "/shots/wakaru-2.webp", caption: "Dialect aware translation" },
       { src: "/shots/wakaru-3.webp", caption: "The multilingual dictionary" },
-      { src: "/shots/wakaru-4.webp", caption: "The manga OCR reader" },
+      { src: "/shots/wakaru-4.webp", caption: "A manga page read and translated in the browser" },
     ],
   },
 ];

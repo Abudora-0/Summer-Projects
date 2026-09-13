@@ -24,6 +24,7 @@
  */
 import { existsSync, mkdirSync, readdirSync, rmSync } from "node:fs";
 import { resolve } from "node:path";
+import { fileURLToPath } from "node:url";
 
 import { chromium } from "playwright-core";
 import sharp from "sharp";
@@ -52,7 +53,12 @@ const CHROME_CANDIDATES = [
 /*
  * Two of these sites put a sign in wall immediately behind the front door
  * (Cortex is Google OAuth, Bento's sheet is behind a lock screen), so only
- * their public pages are listed. Nothing here signs in as anybody.
+ * their public pages are visited. Nothing here signs in as anybody.
+ *
+ * Where the interesting part of a product is behind that wall, or needs a file
+ * dropped into it, the shot is taken from a screenshot the project itself
+ * already commits, via `from`. Those siblings sit next to this repo. A shot
+ * whose source is missing is skipped rather than faked.
  */
 const TARGETS = [
   {
@@ -60,7 +66,9 @@ const TARGETS = [
     origin: "https://bentto.vercel.app",
     shots: [
       { path: "/", label: "The landing page, a contact sheet for the web" },
-      { path: "/lock", label: "The lock screen" },
+      // The sheet itself is behind the lock, so this comes from Bento's own
+      // committed capture rather than showing a sign in form nobody wants.
+      { from: "../Bento/docs/sheet.png", label: "The sheet, once you are inside" },
     ],
   },
   {
@@ -104,7 +112,9 @@ const TARGETS = [
         // A pro tip toast floats in on load and parks itself over the corner.
         hide: ['div[class*="z-[120]"]'],
       },
-      { path: "/tools/qr-code", label: "A tool running in the browser" },
+      // The grid rather than a single tool: every tool page is an empty drop
+      // zone until you feed it a file, and the breadth is the point here.
+      { path: "/", label: "The tool grid", scrollY: 900, hide: ['div[class*="z-[120]"]'] },
     ],
   },
   {
@@ -130,7 +140,9 @@ const TARGETS = [
       { path: "/", label: "Understand anything you read" },
       { path: "/translate", label: "Dialect aware translation" },
       { path: "/dictionary", label: "The multilingual dictionary" },
-      { path: "/read", label: "The manga OCR reader" },
+      // The reader is an empty drop zone until a page is loaded into it, so
+      // this is Wakaru's own capture of a finished translation.
+      { from: "../Wakaru/docs/screenshots/read-result-dark.png", label: "A manga page read and translated in the browser" },
     ],
   },
 ];
@@ -177,6 +189,24 @@ for (const target of targets) {
 
   for (const [i, shot] of target.shots.entries()) {
     const name = `${target.slug}-${i + 1}`;
+
+    // Shots sourced from a sibling repo need no browser at all.
+    if (shot.from) {
+      const src = resolve(fileURLToPath(new URL("..", import.meta.url)), shot.from);
+      if (!existsSync(src)) {
+        failed.push({ name, url: shot.from, message: "source file not found" });
+        console.log(`skipped  ${name}         ${shot.from} (not found)`);
+        continue;
+      }
+      await sharp(src)
+        .resize({ width: 1600, withoutEnlargement: true })
+        .webp({ quality: 82 })
+        .toFile(resolve(OUT, `${name}.webp`));
+      written += 1;
+      console.log(`ok       ${name}.webp   ${shot.from}`);
+      continue;
+    }
+
     const url = `${target.origin}${shot.path}`;
     const page = await context.newPage();
 
@@ -190,6 +220,11 @@ for (const target of targets) {
           content: `${shot.hide.join(", ")} { display: none !important; }`,
         });
         await page.waitForTimeout(250);
+      }
+
+      if (shot.scrollY) {
+        await page.evaluate((y) => window.scrollTo({ top: y, behavior: "instant" }), shot.scrollY);
+        await page.waitForTimeout(900);
       }
 
       const png = await page.screenshot({ type: "png" });

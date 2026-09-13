@@ -19,8 +19,14 @@ import { ArrowUpRightIcon, GridIcon, ListIcon } from "@/components/icons";
 const PREVIEW_W = 460;
 const PREVIEW_H = 288;
 
+/*
+ * "Sep '26" rather than "Sep 26", which reads as the twenty sixth of September
+ * at a glance and makes every row look like it shipped on a specific day.
+ */
 function shipMonth(iso: string) {
-  return new Date(iso).toLocaleDateString("en-US", { month: "short", year: "2-digit" });
+  const d = new Date(iso);
+  const month = d.toLocaleDateString("en-US", { month: "short" });
+  return `${month} '${String(d.getFullYear()).slice(-2)}`;
 }
 
 /**
@@ -125,11 +131,17 @@ function IndexRow({
         </span>
 
         <h3
-          className="font-display min-w-0 flex-1 truncate text-[1.6rem] italic leading-none tracking-tight transition-colors duration-300 sm:text-[2.6rem]"
+          className="font-display min-w-0 flex-1 truncate text-[1.6rem] italic leading-none tracking-tight transition-colors duration-300 sm:text-[2.6rem] lg:w-[19rem] lg:flex-none"
           style={{ color: hovered ? project.accent : undefined }}
         >
           {project.name}
         </h3>
+
+        {/* Fills what is otherwise a long empty stretch between the name and
+            the metadata on wide screens. */}
+        <span className="hidden min-w-0 flex-1 truncate text-sm text-muted lg:block">
+          {project.tagline}
+        </span>
 
         <span className="hidden shrink-0 font-mono text-[10px] uppercase tracking-[0.16em] text-faint sm:block">
           {project.domain}
@@ -240,8 +252,10 @@ export function WorkSection() {
             </h2>
           </div>
           <p className="max-w-xs text-sm leading-relaxed text-muted">
-            Real screenshots, captured from the live deployments. Hover a row to
-            see one.
+            Real screenshots, captured from the live deployments.
+            {/* Hovering is not a thing on a touch screen, where the rows carry
+                their own thumbnails instead. */}
+            <span className="hidden lg:inline"> Hover a row to see one.</span>
           </p>
         </div>
 
