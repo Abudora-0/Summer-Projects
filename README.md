@@ -2,12 +2,15 @@
 
 # Abudora
 
-### Nine products. One summer. No two alike.
+### A full stack developer with a shipping problem.
 
 A portfolio that refuses to show nine things the same way. Every project carries
 its own accent colour through the interface, and every screenshot on it was
-captured from the live deployment by a script in this repo.
+captured from the running product by a script in this repo.
 
+**[abudora-summer.vercel.app](https://abudora-summer.vercel.app)**
+
+[![Live](https://img.shields.io/badge/Live-abudora--summer.vercel.app-d9a441?style=flat-square)](https://abudora-summer.vercel.app)
 [![Next.js](https://img.shields.io/badge/Next.js-16-000000?style=flat-square&logo=nextdotjs&logoColor=white)](https://nextjs.org)
 [![React](https://img.shields.io/badge/React-19-61DAFB?style=flat-square&logo=react&logoColor=black)](https://react.dev)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5-3178C6?style=flat-square&logo=typescript&logoColor=white)](https://typescriptlang.org)
@@ -54,8 +57,15 @@ screenshot floats in beside the pointer on a spring, tilted slightly, clamped so
 it never slides off screen. A segmented control flips the whole thing into a
 contact sheet of all nine captures.
 
-**Real screenshots.** Twenty one of them, taken from the live deployments by
-`npm run shots` rather than mocked up. See [capturing screenshots](#capturing-screenshots).
+**Real screenshots.** Twenty one of them, taken by `npm run shots` rather than
+mocked up. Nineteen come straight from the live deployments. Two come from the
+product's own committed capture, because the interesting part of Bento is
+behind its lock screen and Wakaru's reader needs a page dropped into it before
+it has anything to show. See [capturing screenshots](#capturing-screenshots).
+
+**A hero that shows rather than tells.** Under the headline, the nine cycle one
+at a time, each in its own colour with its own one line pitch, over a nine tick
+progress row you can click to jump. It pauses when you hover it.
 
 **Light and dark.** A full second palette, not an inversion, applied before
 first paint by a blocking inline script so the page never flashes the wrong
@@ -69,7 +79,8 @@ then `W`, `A` or `C` jumps between sections.
 context aware status line, a gantt of the real commit history of all nine
 projects, count ups driven from the data rather than typed in, a fullscreen
 screenshot viewer with arrow key navigation, a scroll progress ring in the
-navigation, and `prefers-reduced-motion` honoured throughout.
+navigation, a tab title that names the section you are actually reading, and
+`prefers-reduced-motion` honoured throughout.
 
 <div align="center">
 
@@ -120,7 +131,36 @@ Scrollbars are hidden and the colour profile is pinned to sRGB, so the accents
 the site reads from these images stay accurate.
 
 Two of the nine sit behind a sign in wall, so only their public pages are
-captured. Nothing in this repo signs in as anybody.
+visited. Nothing in this repo signs in as anybody.
+
+Each shot in the script takes a route plus a few optional switches:
+
+| | |
+|---|---|
+| `path` | the route to visit on that product |
+| `hide` | selectors to drop before the shutter, for toasts and cookie bars |
+| `scrollY` | shoot further down the page than the fold |
+| `from` | use a screenshot the product itself commits, instead of visiting it |
+
+`from` exists for the two cases a public URL cannot reach: Bento's sheet lives
+behind its lock screen, and Wakaru's reader is an empty drop zone until you give
+it a page. Both read from the sibling repo next to this one, and a missing
+source is skipped and reported rather than quietly faked.
+
+## Two things worth knowing
+
+**Framer Motion's presence animations are avoided at the route and list level.**
+Two separate bugs on this Next and React pair traced back to them. `AnimatePresence`
+with `mode="popLayout"` silently stopped the work filter from re-rendering, and
+route level exit animations left the incoming page stuck at the outgoing page's
+`opacity: 0`, so navigating home from a project showed a blank screen until you
+reloaded. Page transitions are a keyed CSS animation now, whose resting state is
+visible, so no route can be stranded invisible. The library still drives
+everything else.
+
+**Nothing on the page depends on an animation finishing to be readable.** Numbers
+count up, lines mask in, the wordmark staggers, but each one resolves to the
+state it would have had anyway.
 
 ## Structure
 
